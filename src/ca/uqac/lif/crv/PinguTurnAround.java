@@ -8,11 +8,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class PinguP6 {
+public class PinguTurnAround {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        PinguXMLReader reader = new PinguXMLReader("basher-blocker-090.xml");
+        if (args.length != 1) {
+            return;
+        }
+
+        String filepath = args[0];
+
+        PinguXMLReader reader = new PinguXMLReader(filepath);
 
         Pullable p = reader.getPullableOutput(0);
 
@@ -61,7 +67,7 @@ public class PinguP6 {
                 }
 
                 for (PinguTrace.Vector2D v : blockers) {
-                    if (Math.abs(v.x - c.position.x) <= 6f && Math.abs(v.y - c.position.y) < 3f) {
+                    if (Math.abs(v.x - c.position.x) <= 6f && Math.abs(v.y - c.position.y) < 10f) {
                         needturnids.put(c.id, c.velocity.x > 0);
                     }
                 }

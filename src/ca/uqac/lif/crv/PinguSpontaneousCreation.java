@@ -9,7 +9,13 @@ public class PinguSpontaneousCreation {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        PinguXMLReader reader = new PinguXMLReader("test/basher-blocker-090.xml");
+        if (args.length != 1) {
+            return;
+        }
+
+        String filepath = args[0];
+
+        PinguXMLReader reader = new PinguXMLReader(filepath);
 
         Pullable p = reader.getPullableOutput(0);
 
@@ -25,11 +31,17 @@ public class PinguSpontaneousCreation {
                     pinguids.add(c.id);
                 }
             } else {
+                int count = 0;
                 for (PinguTrace.Character c : trace.getCharacters()) {
                     if (!pinguids.contains(c.id)) {
                         System.out.println("STATUS: Violated");
                         System.exit(0);
                     }
+                    ++count;
+                }
+                if (count != pinguids.size()) {
+                    System.out.println("STATUS: Violated");
+                    System.exit(0);
                 }
             }
         }
