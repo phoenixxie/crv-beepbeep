@@ -1,5 +1,6 @@
 package ca.uqac.lif.crv;
 
+import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Pullable;
 
 import java.io.FileNotFoundException;
@@ -16,33 +17,16 @@ public class PinguSpontaneousCreation {
         String filepath = args[0];
 
         PinguXMLReader reader = new PinguXMLReader(filepath);
+        PinguIDChecker checker = new PinguIDChecker();
 
-        Pullable p = reader.getPullableOutput(0);
+        Connector.connect(reader, checker);
 
-        HashSet<Integer> pinguids = null;
+        Pullable p = checker.getPullableOutput(0);
 
-        PinguTrace trace = null;
         while (p.hasNext() == Pullable.NextStatus.YES) {
-            trace = (PinguTrace) p.pull();
-
-            if (pinguids == null) {
-                pinguids = new HashSet<>();
-                for (PinguTrace.Character c : trace.getCharacters()) {
-                    pinguids.add(c.id);
-                }
-            } else {
-                int count = 0;
-                for (PinguTrace.Character c : trace.getCharacters()) {
-                    if (!pinguids.contains(c.id)) {
-                        System.out.println("STATUS: Violated");
-                        System.exit(0);
-                    }
-                    ++count;
-                }
-                if (count != pinguids.size()) {
-                    System.out.println("STATUS: Violated");
-                    System.exit(0);
-                }
+            if (!(boolean)p.pull()) {
+                System.out.println("STATUS: Violated");
+                System.exit(0);
             }
         }
 
